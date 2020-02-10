@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Computersjakk, del I</title>
+<meta name="author" content="Tord Romstad"/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="http://cdn.jsdelivr.net/reveal.js/3.0.0/css/reveal.css"/>
+
+<link rel="stylesheet" href="http://cdn.jsdelivr.net/reveal.js/3.0.0/css/theme/moon.css" id="theme"/>
+
+<link rel="stylesheet" href="./css/bespoke.css"/>
+
+<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+<script>
+    if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = 'http://cdn.jsdelivr.net/reveal.js/3.0.0/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    }
+</script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide">
+<h1>Computersjakk, del I</h1><h2>Klassisk tresøk</h2>
+</section>
+
+<section>
+<section id="slide-orgfde6335">
+<h2 id="orgfde6335">Kort historie</h2>
+<div class="outline-text-2" id="text-orgfde6335">
+</div>
+</section>
+<section id="slide-orgcbdba7e">
+<h3 id="orgcbdba7e">Tyrkeren (1770)</h3>
+
+<div class="figure">
+<p><img src="img/turk.jpg" alt="turk.jpg" height="400" />
+</p>
+</div>
+
+</section>
+<section id="slide-org3b35742">
+<h3 id="org3b35742">El Ajedrecista (1890? 1910?)</h3>
+
+<div class="figure">
+<p><img src="img/ajedrecista.jpg" alt="ajedrecista.jpg" height="400" />
+</p>
+</div>
+
+</section>
+<section id="slide-org98995cb">
+<h3 id="org98995cb">Minimaks-teoremet (von Neumann, 1928)</h3>
+
+<div class="figure">
+<p><img src="img/john-von-neumann-2.jpg" alt="john-von-neumann-2.jpg" height="400" />
+</p>
+</div>
+
+
+</section>
+<section id="slide-orgb6d537a">
+<h3 id="orgb6d537a">Turochamp (Turing, 1948)</h3>
+
+<div class="figure">
+<p><img src="img/alan-turing.jpg" alt="alan-turing.jpg" height="400" />
+</p>
+</div>
+
+
+</section>
+<section id="slide-org486a299">
+<h3 id="org486a299">Den vitenskaplige epoken (1950-1980)</h3>
+
+<div class="figure">
+<p><img src="img/maniac.jpg" alt="maniac.jpg" height="400" />
+</p>
+</div>
+
+</section>
+<section>
+
+<ul>
+<li class="fragment roll-in">De fleste programmer ble utviklet av informatikere ved universiteter.</li>
+<li class="fragment roll-in">Kald krig-rivalisering mellom amerikanske og sovjetiske forskningsmiljøer.</li>
+<li class="fragment roll-in">Forskning ble publisert.</li>
+
+</ul>
+
+</section>
+<section id="slide-orgba5e3ef">
+<h3 id="orgba5e3ef">Den kommersielle epoken (1980-2000)</h3>
+
+<div class="figure">
+<p><img src="img/mephisto.jpg" alt="mephisto.jpg" />
+</p>
+</div>
+
+</section>
+<section>
+
+<ul>
+<li class="fragment roll-in">Datamaskiner ble billige nok til at vanlige forbrukere kunne kjøpe dem.</li>
+<li class="fragment roll-in">Selskaper som Mephisto, Saitek, Novag og Fidelity lagde dedikerte
+sjakkcomputere med innebygde sjakkbrett.</li>
+<li class="fragment roll-in">Kommersielle sjakkprogrammer og -computere ble en stor suksess.</li>
+<li class="fragment roll-in">De ledende sjakkprogrammererne holdt sine teknikker hemmelige.</li>
+<li class="fragment roll-in">Akademiske programmer begynte å bli akterutseilt.</li>
+
+</ul>
+
+</section>
+<section id="slide-orgdcac8ce">
+<h3 id="orgdcac8ce">Deep Blue (1996-1997)</h3>
+
+<div class="figure">
+<p><img src="img/deep-blue-kasparov.jpg" alt="deep-blue-kasparov.jpg" />
+</p>
+</div>
+
+
+</section>
+<section id="slide-org5e047a9">
+<h3 id="org5e047a9">Open Source-epoken (2000-)</h3>
+
+<div class="figure">
+<p><img src="img/stockfish.png" alt="stockfish.png" height="400" />
+</p>
+</div>
+
+</section>
+<section>
+
+<ul>
+<li class="fragment roll-in">Etter hvert som datamaskiner ble raskere, krympet markedet for kommersielle
+sjakkmotorer.</li>
+<li class="fragment roll-in">Samtidig begynte den akademiske interessen for computersjakk å avta etter Deep
+Blue.</li>
+<li class="fragment roll-in">I den mindre konkurransepregede atmosfæren begynte amatørprogrammerere å dele
+kode og ideer på Internet.</li>
+<li class="fragment roll-in">Til sist dukket det opp to GPL-programmer (Fruit og Stockfish) som kunne
+konkurrere med og etter hvert passerte de beste kommersielle programmene.</li>
+
+</ul>
+
+</section>
+<section id="slide-orge4210b1">
+<h3 id="orge4210b1">Alpha Zero (2017)</h3>
+
+<div class="figure">
+<p><img src="img/alphazero.jpg" alt="alphazero.jpg" height="400" />
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-orga13855b">
+<h2 id="orga13855b">Minimaks-tresøk</h2>
+
+<div class="figure">
+<p><img src="img/Tree-Drawing-Pic.jpg" alt="Tree-Drawing-Pic.jpg" height="400" />
+</p>
+</div>
+
+</section>
+<section>
+
+
+<div class="figure">
+<p><img src="img/tree.PNG" alt="tree.PNG" />
+</p>
+</div>
+
+</section>
+<section>
+
+
+<div class="figure">
+<p><img src="img/tree2.PNG" alt="tree2.PNG" />
+</p>
+</div>
+
+</section>
+<section>
+
+
+<div class="figure">
+<p><img src="img/tree3.PNG" alt="tree3.PNG" />
+</p>
+</div>
+
+</section>
+<section id="slide-org760b868">
+<h3 id="org760b868">Minimaks-algoritmen</h3>
+<pre  class="example">
+minimax(board: Board, depth: Int) -&gt; Int
+   var ourMove = sideToMove(board) == us
+
+   if depth == 0
+      return evaluate(board)
+   else
+      var result = ourMove ? -INFINITY : +INFINITY
+      for move in possibleMoves(board)
+         var value = minimax(doMove(board, move), depth - 1)
+         if (ourMove &amp;&amp; value &gt; result) ||
+            (!ourMove &amp;&amp; value &lt; result)
+            result = value
+
+      return result
+</pre>
+
+<p class="fragment roll-in">
+Det ser litt grisete ut med den kondisjonelle logikken basert på <code>ourMove</code>. Kan
+vi forenkle?
+</p>
+
+</section>
+<section id="slide-org350a74e">
+<h3 id="org350a74e">Negamaks-algoritmen</h3>
+<pre  class="example">
+negamax(board: Board, depth: Int) -&gt; Int
+   if depth == 0
+      return evaluate(board)
+   else
+      var result = -INFINITY
+      for move in possibleMoves(board)
+         var value = -negamax(doMove(board, move), depth - 1)
+         if value &gt; result
+            result = value
+
+   return result
+</pre>
+
+</section>
+<section id="slide-orgb46a5a1">
+<h3 id="orgb46a5a1">Problem: Størrelsen på spilltreet</h3>
+<ul>
+<li class="fragment roll-in">Gjennomsnittlig antall trekk i sjakk er ca. 35.</li>
+<li class="fragment roll-in">Dette betyr at et søk 10 halvtrekk fremover krever ca. \(2.8 \cdot
+  10^{15}\) noder.</li>
+<li class="fragment roll-in">Et slikt søk ville tatt 10 år hvis man søker 10 millioner noder/sekund.</li>
+<li class="fragment roll-in">Vi trenger en metode for å dramatisk redusere størrelsen på treet.</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org0b51916">
+<h2 id="org0b51916">Alfa-beta-avskjæringer</h2>
+
+<div class="figure">
+<p><img src="img/pruning.jpg" alt="pruning.jpg" />
+</p>
+</div>
+
+</section>
+<section>
+
+
+<div class="figure">
+<p><img src="img/ab1.png" alt="ab1.png" />
+</p>
+</div>
+
+</section>
+<section>
+
+
+<div class="figure">
+<p><img src="img/ab2.PNG" alt="ab2.PNG" />
+</p>
+</div>
+
+</section>
+<section>
+
+
+<div class="figure">
+<p><img src="img/ab3.PNG" alt="ab3.PNG" />
+</p>
+</div>
+
+</section>
+<section>
+
+
+<div class="figure">
+<p><img src="img/ab4.PNG" alt="ab4.PNG" />
+</p>
+</div>
+
+</section>
+<section>
+
+
+<div class="figure">
+<p><img src="img/ab5.PNG" alt="ab5.PNG" />
+</p>
+</div>
+
+</section>
+<section>
+
+
+<div class="figure">
+<p><img src="img/ab6.PNG" alt="ab6.PNG" />
+</p>
+</div>
+
+</section>
+<section>
+
+
+<div class="figure">
+<p><img src="img/ab7.PNG" alt="ab7.PNG" />
+</p>
+</div>
+
+</section>
+<section>
+
+
+<div class="figure">
+<p><img src="img/ab8.PNG" alt="ab8.PNG" />
+</p>
+</div>
+
+</section>
+<section>
+
+
+<div class="figure">
+<p><img src="img/ab9.PNG" alt="ab9.PNG" />
+</p>
+</div>
+
+</section>
+<section id="slide-org35e1fc8">
+<h3 id="org35e1fc8">Negamaks med alfa-beta-avskjæringer</h3>
+<pre  class="example">
+negamax(board: Board, alpha: Int, beta: Int, depth: Int) -&gt; Int
+   if depth == 0
+      return evaluate(board)
+   else
+      for move in possibleMoves(board)
+         var value =
+            -negamax(doMove(board, move), -beta, -alpha, depth - 1)
+         if value &gt;= beta
+            return value   // EARLY RETURN!
+         if value &gt; alpha
+            alpha = value
+
+   return alpha
+</pre>
+
+</section>
+<section>
+
+<ul>
+<li class="fragment roll-in"><i>Forgreningsfaktoren</i> (FF) til et spilltre er gjennomsnittlig antall lovlige
+trekk.</li>
+<li class="fragment roll-in">Den <i>effektive forgreningsfaktoren</i> (EFF) til en tresøkingsalgoritme er
+gjennomsnittlig forhold mellom antall noder ved et søk til dyp \(n\) og et søk
+til dyp \(n-1\).</li>
+<li class="fragment roll-in">For et rent negamaks-søk uten alfa/beta er FF = EFF.</li>
+
+</ul>
+
+</section>
+<section>
+<ul>
+<li class="fragment roll-in">For negamaks med alfa/beta er EFF lik kvadratroten av FF, under forutsetning
+av at trekksorteringen er perfekt (dvs. at det beste trekket alltid blir søkt
+først).</li>
+<li class="fragment roll-in">Dette bringer EFF for sjakk ned til ca. 6.</li>
+<li class="fragment roll-in">Et søk med dyp 5 hele trekk gir et tre med 60 millioner noder, eller ca. 10
+sekunder hvis vi søker 10 millioner noder/sekund.</li>
+<li class="fragment roll-in">Hvordan kan vi sørge for at det beste trekket alltid blir søkt først?</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-orga5d5c75">
+<h2 id="orga5d5c75">Trekksortering</h2>
+
+<div class="figure">
+<p><img src="img/sorting.png" alt="sorting.png" height="400" />
+</p>
+</div>
+
+
+</section>
+<section id="slide-orga3585bc">
+<h3 id="orga3585bc">Transposisjonstabeller</h3>
+<p class="fragment (roll-in)">
+Sjakkprogrammer bruker en stor hashtabell til å lagre informasjon om stillinger
+de tidligere har sett i søketreet. Eksempler på informasjon som lagres for hver
+stilling er:
+</p>
+
+<ul>
+<li class="fragment roll-in">Søkedypet for denne stillingen.</li>
+<li class="fragment roll-in">Verdien som ble returnert av søket.</li>
+<li class="fragment roll-in">Hvorvidt denne verdien var en eksakt verdi eller bare en øvre eller nedre
+grense for den eksakte verdien.</li>
+<li class="fragment roll-in">Det beste trekket som ble funnet.</li>
+
+</ul>
+
+</section>
+<section>
+<p class="fragment (roll-in)">
+Det finnes ikke nok minne til å lagre <i>alle</i> stillinger som forekommer i søket.
+Programmet forsøker å ta vare på de viktigste stillingene og overskrive de
+mindre viktige.
+</p>
+
+<p class="fragment (roll-in)">
+Hvis en stilling har vært søkt før og er lagret i transposisjonstabellen, og
+oppstår igjen i søket, kan informasjonen brukes på to måter:
+</p>
+
+</section>
+<section>
+
+<ul>
+<li class="fragment roll-in">Hvis det forrige søket var tilstrekkelig dypt, kan vi bruke den lagrede
+informasjonen og unngå å søke på nytt.</li>
+<li class="fragment roll-in">Hvis det forrige søket ikke var tilstrekkelig dypt, men det er et beste trekk
+lagret, kan vi prøve dette trekket først. Det er sannsynligvis fremdeles det
+beste trekket.</li>
+
+</ul>
+
+</section>
+<section id="slide-org43cce42">
+<h3 id="org43cce42">Iterativ fordypning</h3>
+<p class="fragment (roll-in)">
+Istedenfor å umiddelbart gjøre et dypt søk er det bedre å først gjøre et søk til
+dyp 1, så et søk til dyp 2, osv., helt til vi har nådd ønsket dyp eller tiden er
+brukt opp.
+</p>
+
+<p class="fragment (roll-in)">
+Ved hvert dyp er transposisjonstabellen fylt av massevis av beste trekk fra
+forrige dyp. Dette hjelper oss til å søke trekkene som sannsynligvis er best
+først.
+</p>
+
+<p class="fragment (roll-in)">
+Iterativ fordypning forenkler også fornuftig tidshåndtering.
+</p>
+
+</section>
+<section id="slide-orgc1c379d">
+<h3 id="orgc1c379d">Andre trekksorteringsheuristikker</h3>
+<ul>
+<li class="fragment roll-in">Prøv trekk fra transposisjonstabellen, hvis det finnes.</li>
+<li class="fragment roll-in">Prøv slag som ser ut til å vinne meteriell.</li>
+<li class="fragment roll-in">Prøv trekk som var de beste trekkene i søskennoder.</li>
+<li class="fragment roll-in">Sorter resten av trekkene etter hvor ofte de har vært beste trekk tidligere
+under søket.</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org8a3a156">
+<h2 id="org8a3a156">Stillhetssøk</h2>
+<ul>
+<li class="fragment roll-in"><i>Horisontproblemet</i>: Hva hvis vi er ved dyp 0 (altså en løvnode), men det
+skjer noe fryktelig i neste trekk?</li>
+<li class="fragment roll-in">Eksempel: Ved dyp 1 slår dronningen et tårn som er forsvart.
+Evalueringsfunksjonen returnerer et stort tall, fordi vi nettopp vant et tårn.</li>
+<li class="fragment roll-in">Men i virkeligheten er den store scoren feilaktig, fordi motstanderen kan ta
+dronningen i neste trekk.</li>
+
+</ul>
+
+</section>
+<section>
+</section>
+<section id="slide-org921e180">
+<h3 id="org921e180">To mulige løsninger</h3>
+<ul>
+<li class="fragment roll-in">Å ta hensyn til brikker som står i slag i evalueringsfunksjonen.</li>
+<li class="fragment roll-in">Å prøve å la våre å evaluere ustabile stillinger, og å heller søke videre til
+vi når en stabil og rolig stilling.</li>
+
+</ul>
+
+</section>
+<section>
+<ul>
+<li class="fragment roll-in">I prakis har den andre løsningen vist seg å fungere bedre. Vi gjør et
+<i>stillhetssøk</i> (quiescence search).</li>
+<li class="fragment roll-in">Ved dyp 0 kaller vi ikke lenger evalueringsfunksjonen, men stillhetssøket.</li>
+<li class="fragment roll-in">Stillhetssøket ligner på det vanlige søket, bortsett fra at bare slag (og
+kanskje noen sjakker) blir søkt, og det er lov å la være å gjøre et trekk
+istedenfor å slå noe.</li>
+
+</ul>
+
+</section>
+</section>
+<section>
+<section id="slide-org9ef3efa">
+<h2 id="org9ef3efa">Nulltrekksavskjæringer</h2>
+<p class="fragment (roll-in)">
+<i>Nulltrekksobservasjonen</i>: I nesten alle sjakkstillinger finnes det et trekk som
+er bedre enn å gjøre ingenting (å gjøre et "nulltrekk").
+</p>
+
+<p class="fragment (roll-in)">
+Hvordan kan vi bruke dette til å optimere søket?
+</p>
+
+</section>
+<section>
+</section>
+<section id="slide-orgd1d2d51">
+<h3 id="orgd1d2d51">Rekursiv nulltrekksavskjæring</h3>
+<ul>
+<li class="fragment roll-in">Før vi begynner å søke lovlige trekk gjør vi et nulltrekk (dvs. skifter siden
+som er i trekket uten å gjøre noe trekk) og søker den resulterende stillingen
+<i>med redusert dyp</i>.</li>
+<li class="fragment roll-in">Hvis søket med redusert dyp returnerer en score &gt;= beta, returnerer vi denne
+scoren umiddelbart, uten å søke noe trekk.</li>
+
+</ul>
+
+</section>
+<section>
+
+<pre  class="example">
+negamax(board: Board, alpha: Int, beta: Int, depth: Int) -&gt; Int
+   if depth == 0
+      return quiescenceSearch(board, alpha, beta)
+   else
+
+      // NEW: Null move pruning
+      if !isCheck(board)
+         var nullValue =
+            -negamax(doNullMove(board), -beta, -alpha, depth - R)
+         if nullValue &gt;= beta
+            return nullValue
+
+      for move in possibleMoves(board)
+         var value =
+            -negamax(doMove(board, move), -beta, -alpha, depth - 1)
+         if value &gt;= beta
+            return value   // EARLY RETURN!
+         if value &gt; alpha
+            alpha = value
+
+   return alpha
+</pre>
+
+</section>
+<section>
+
+<p class="fragment (roll-in)">
+Rekursiv nulltrekksavskjæring reduserer effektiv forgreningsfaktor for sjakk fra
+ca. 6 til ca. 3.5.
+</p>
+
+<p class="fragment (roll-in)">
+I motsetning til alfa/beta-avskjæringer er nulltrekksavskjæringer teoretisk
+usunne: De kan introdusere feil.
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org50135ed">
+<h2 id="org50135ed">Reduksjoner</h2>
+<p class="fragment (roll-in)">
+Claude Shannon skisserte to typer sjakkprogrammer:
+</p>
+
+<ul>
+<li class="fragment roll-in"><b>Shannon type A</b>-programmer søker et tre med alle <i>lovlige</i> trekk.</li>
+<li class="fragment roll-in"><b>Shannon type B</b>-programmer søker et tre med alle <i>plausible</i> trekk.</li>
+<li class="fragment roll-in">Inntil nylig vare alle gode sjakkprogrammer av type A.</li>
+<li class="fragment roll-in">Det er for vanskelig å lage en presis plausible-trekk-generator.</li>
+
+</ul>
+
+</section>
+<section>
+<ul>
+<li class="fragment roll-in">Hybrid mellom type A og type B: Søk alle lovlige trekk, men søk de mindre
+plausible trekkene med <i>redusert dyp</i>.</li>
+<li class="fragment roll-in">Vi antar at de mindre plausible trekkene viser seg å være dårlige, men hvis de
+overrasker oss og returner en god verdi, søker vi dem igjen med fullt dyp.</li>
+<li class="fragment roll-in">Hva slags heuristikker kan vi bruke for å bestemme hvilke trekk som er
+plausible?</li>
+
+</ul>
+
+</section>
+<section>
+<ul>
+<li class="fragment roll-in">Vi sorterer allerede trekkene basert på hvor gode vi tror de er, med de antatt
+beste trekkene først.</li>
+<li class="fragment roll-in">Søk trekkene i begynnelsen av listen med fullt dyp. Trekkene senere i listen
+er som regel svakere. Vi søker dem med redusert dyp, hvis de ikke er spesielt
+spennende.</li>
+
+</ul>
+
+</section>
+<section>
+
+<pre  class="example">
+negamax(board: Board, alpha: Int, beta: Int, depth: Int) -&gt; Int
+   if depth == 0
+      return quiescenceSearch(board, alpha, beta)
+   else
+      var moveCount = 0
+      for move in possibleMoves(board)
+
+         // NEW: Late More Reductions
+         if moveCount &gt;= 3 &amp;&amp; !isExciting(move)
+            var lmrValue =
+               -negamax(doMove(board, move), -beta, -alpha, depth - R)
+            if lmrValue &lt;= alpha
+               continue // SKIP FULL DEPTH SEARCH!
+
+         var value =
+            -negamax(doMove(board, move), -beta, -alpha, depth - 1)
+         if value &gt;= beta
+            return value   // EARLY RETURN!
+         if value &gt; alpha
+            alpha = value
+         moveCount++
+
+   return alpha
+</pre>
+
+</section>
+<section>
+
+</section>
+<section id="slide-org24b19df">
+<h4 id="org24b19df">Hvilke trekk er "spennende" og bør alltid søkes med fullt dyp?</h4>
+<p class="fragment (roll-in)">
+Noen ideer som ofte fungerer bra:
+</p>
+
+<ul>
+<li class="fragment roll-in">Sjakker</li>
+<li class="fragment roll-in">Slag som vinner materiell</li>
+<li class="fragment roll-in">Bondeforvandlinger</li>
+<li class="fragment roll-in">Trekk som truer noe skummelt</li>
+<li class="fragment roll-in">Trekk som ofte har vært gode tidligere i søket</li>
+<li class="fragment roll-in">Trekk som ofte har vært gode svar på trekket motstanderen nettopp gjorde.</li>
+
+</ul>
+
+</section>
+<section>
+<p class="fragment (roll-in)">
+Denne typen reduksjoner kan presse den effektive forgreningsfaktoren for sjakk
+ned til et sted mellom 1.5 og 2.
+</p>
+
+<p class="fragment (roll-in)">
+Treet er imidlertid så inhomogent at det ikke lenger gir noe særlig mening å
+snakke om dypet på treet eller effektiv forgreningsfaktor.
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-org9fb950b">
+<h2 id="org9fb950b">Utvidelser</h2>
+<p class="fragment (roll-in)">
+I tillegg til å <i>redusere</i> dypet for mindre interessante trekk, gir det mening å
+<i>utvide</i> dypet for spesielt interessante trekk.
+</p>
+
+<p class="fragment (roll-in)">
+Før pleide de fleste programmer å utvide sjakker, tvungne tilbakeslag, og ofte
+bondetrekk til syvende rad.
+</p>
+
+<p class="fragment (roll-in)">
+Dessverre har utvidelser en tendens til å øke den effektive forgreningsfaktoren.
+De brukes derfor ikke så ofte lenger.
+</p>
+
+</section>
+<section>
+
+<p class="fragment (roll-in)">
+Unntaket er den ene gjenlevende ideen fra Deep Blue:
+</p>
+
+<p class="fragment (roll-in)">
+Et <i>singulært trekk</i> er et trekk som er det eneste gode trekket i en stilling.
+</p>
+
+<p class="fragment (roll-in)">
+<i>Singulære utvidelser</i> betyr at dypet økes med 1 for alle singulære trekk.
+</p>
+
+<p class="fragment (roll-in)">
+Denne teknikken kan ofte hjelpe programmet til å finne veldig lange forserte
+varianter mye raskere.
+</p>
+</section>
+</section>
+</div>
+</div>
+<script src="http://cdn.jsdelivr.net/reveal.js/3.0.0/lib/js/head.min.js"></script>
+<script src="http://cdn.jsdelivr.net/reveal.js/3.0.0/js/reveal.js"></script>
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+
+controls: true,
+progress: true,
+history: false,
+center: true,
+slideNumber: 'c',
+rollingLinks: false,
+keyboard: true,
+mouseWheel: false,
+fragmentInURL: false,
+hashOneBasedIndex: false,
+pdfSeparateFragments: true,
+
+overview: true,
+
+theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+transition: Reveal.getQueryHash().transition || 'convex', // see README of reveal.js for options
+transitionSpeed: 'default',
+
+// Optional libraries used to extend reveal.js
+dependencies: [
+ { src: 'http://cdn.jsdelivr.net/reveal.js/3.0.0/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: 'http://cdn.jsdelivr.net/reveal.js/3.0.0/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+ { src: 'http://cdn.jsdelivr.net/reveal.js/3.0.0/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+ { src: 'http://cdn.jsdelivr.net/reveal.js/3.0.0/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } },
+ { src: 'http://cdn.jsdelivr.net/reveal.js/3.0.0/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } }]
+
+});
+</script>
+</body>
+</html>

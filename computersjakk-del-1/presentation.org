@@ -1,0 +1,477 @@
+#+TITLE: Computersjakk, del I
+#+SUBTITLE: Klassisk tresøk
+#+OPTIONS: num:nil, toc:nil, author:nil
+#+REVEAL_TITLE_SLIDE: <h1>%t</h1><h2>%s</h2>
+#+REVEAL_ROOT: http://cdn.jsdelivr.net/reveal.js/3.0.0/
+#+REVEAL_THEME: moon
+#+REVEAL_EXTRA_CSS: ./css/bespoke.css
+
+* Kort historie
+
+** Tyrkeren (1770)
+
+#+ATTR_HTML: :height 400
+[[file:img/turk.jpg]]
+
+** El Ajedrecista (1890? 1910?)
+
+#+ATTR_HTML: :height 400
+[[file:img/ajedrecista.jpg]]
+
+** Minimaks-teoremet (von Neumann, 1928)
+
+#+ATTR_HTML: :height 400
+[[file:img/john-von-neumann-2.jpg]]
+
+
+** Turochamp (Turing, 1948)
+
+#+ATTR_HTML: :height 400
+[[file:img/alan-turing.jpg]]
+
+
+** Den vitenskaplige epoken (1950-1980)
+
+#+ATTR_HTML: :height 400
+[[file:img/maniac.jpg]]
+
+#+REVEAL: split
+
+#+ATTR_REVEAL: :frag (roll-in)
+- De fleste programmer ble utviklet av informatikere ved universiteter.
+- Kald krig-rivalisering mellom amerikanske og sovjetiske forskningsmiljøer.
+- Forskning ble publisert.
+
+** Den kommersielle epoken (1980-2000)
+
+[[file:img/mephisto.jpg]]
+
+#+REVEAL: split
+
+#+ATTR_REVEAL: :frag (roll-in)
+- Datamaskiner ble billige nok til at vanlige forbrukere kunne kjøpe dem.
+- Selskaper som Mephisto, Saitek, Novag og Fidelity lagde dedikerte
+  sjakkcomputere med innebygde sjakkbrett.
+- Kommersielle sjakkprogrammer og -computere ble en stor suksess.
+- De ledende sjakkprogrammererne holdt sine teknikker hemmelige.
+- Akademiske programmer begynte å bli akterutseilt.
+
+** Deep Blue (1996-1997)
+[[file:img/deep-blue-kasparov.jpg]]
+
+
+** Open Source-epoken (2000-)
+
+#+ATTR_HTML: :height 400
+[[file:img/stockfish.png]]
+
+#+REVEAL: split
+
+#+ATTR_REVEAL: :frag (roll-in)
+- Etter hvert som datamaskiner ble raskere, krympet markedet for kommersielle
+  sjakkmotorer.
+- Samtidig begynte den akademiske interessen for computersjakk å avta etter Deep
+  Blue.
+- I den mindre konkurransepregede atmosfæren begynte amatørprogrammerere å dele
+  kode og ideer på Internet.
+- Til sist dukket det opp to GPL-programmer (Fruit og Stockfish) som kunne
+  konkurrere med og etter hvert passerte de beste kommersielle programmene.
+
+** Alpha Zero (2017)
+
+#+ATTR_HTML: :height 400
+[[file:img/alphazero.jpg]]
+
+* Minimaks-tresøk
+
+#+ATTR_HTML: :height 400
+[[file:img/Tree-Drawing-Pic.jpg]]
+
+#+REVEAL: split
+
+[[file:img/tree.PNG]]
+
+#+REVEAL: split
+
+[[file:img/tree2.PNG]]
+
+#+REVEAL: split
+
+[[file:img/tree3.PNG]]
+
+** Minimaks-algoritmen
+
+#+BEGIN_SRC
+minimax(board: Board, depth: Int) -> Int
+   var ourMove = sideToMove(board) == us
+
+   if depth == 0
+      return evaluate(board)
+   else
+      var result = ourMove ? -INFINITY : +INFINITY
+      for move in possibleMoves(board)
+         var value = minimax(doMove(board, move), depth - 1)
+         if (ourMove && value > result) ||
+            (!ourMove && value < result)
+            result = value
+
+      return result
+#+END_SRC
+
+#+ATTR_REVEAL: :frag roll-in
+Det ser litt grisete ut med den kondisjonelle logikken basert på ~ourMove~. Kan
+vi forenkle?
+
+** Negamaks-algoritmen
+
+#+BEGIN_SRC
+negamax(board: Board, depth: Int) -> Int
+   if depth == 0
+      return evaluate(board)
+   else
+      var result = -INFINITY
+      for move in possibleMoves(board)
+         var value = -negamax(doMove(board, move), depth - 1)
+         if value > result
+            result = value
+
+   return result
+#+END_SRC
+
+** Problem: Størrelsen på spilltreet
+
+#+ATTR_REVEAL: :frag (roll-in)
+- Gjennomsnittlig antall trekk i sjakk er ca. 35.
+- Dette betyr at et søk 10 halvtrekk fremover krever ca. $2.8 \cdot
+  10^{15}$ noder.
+- Et slikt søk ville tatt 10 år hvis man søker 10 millioner noder/sekund.
+- Vi trenger en metode for å dramatisk redusere størrelsen på treet.
+
+* Alfa-beta-avskjæringer
+
+[[file:img/pruning.jpg]]
+
+#+REVEAL: split
+
+[[file:img/ab1.png]]
+
+#+REVEAL: split
+
+[[file:img/ab2.PNG]]
+
+#+REVEAL: split
+
+[[file:img/ab3.PNG]]
+
+#+REVEAL: split
+
+[[file:img/ab4.PNG]]
+
+#+REVEAL: split
+
+[[file:img/ab5.PNG]]
+
+#+REVEAL: split
+
+[[file:img/ab6.PNG]]
+
+#+REVEAL: split
+
+[[file:img/ab7.PNG]]
+
+#+REVEAL: split
+
+[[file:img/ab8.PNG]]
+
+#+REVEAL: split
+
+[[file:img/ab9.PNG]]
+
+** Negamaks med alfa-beta-avskjæringer
+
+#+BEGIN_SRC
+negamax(board: Board, alpha: Int, beta: Int, depth: Int) -> Int
+   if depth == 0
+      return evaluate(board)
+   else
+      for move in possibleMoves(board)
+         var value =
+            -negamax(doMove(board, move), -beta, -alpha, depth - 1)
+         if value >= beta
+            return value   // EARLY RETURN!
+         if value > alpha
+            alpha = value
+
+   return alpha
+#+END_SRC
+
+#+REVEAL: split
+
+#+ATTR_REVEAL: :frag (roll-in)
+- /Forgreningsfaktoren/ (FF) til et spilltre er gjennomsnittlig antall lovlige
+  trekk.
+- Den /effektive forgreningsfaktoren/ (EFF) til en tresøkingsalgoritme er
+  gjennomsnittlig forhold mellom antall noder ved et søk til dyp $n$ og et søk
+  til dyp $n-1$.
+- For et rent negamaks-søk uten alfa/beta er FF = EFF.
+
+#+REVEAL: split
+#+ATTR_REVEAL: :frag (roll-in)
+- For negamaks med alfa/beta er EFF lik kvadratroten av FF, under forutsetning
+  av at trekksorteringen er perfekt (dvs. at det beste trekket alltid blir søkt
+  først).
+- Dette bringer EFF for sjakk ned til ca. 6.
+- Et søk med dyp 5 hele trekk gir et tre med 60 millioner noder, eller ca. 10
+  sekunder hvis vi søker 10 millioner noder/sekund.
+- Hvordan kan vi sørge for at det beste trekket alltid blir søkt først?
+
+* Trekksortering
+
+#+ATTR_HTML: :height 400
+[[file:img/sorting.png]]
+
+
+** Transposisjonstabeller
+
+#+ATTR_REVEAL: :frag (roll-in)
+Sjakkprogrammer bruker en stor hashtabell til å lagre informasjon om stillinger
+de tidligere har sett i søketreet. Eksempler på informasjon som lagres for hver
+stilling er:
+
+#+ATTR_REVEAL: :frag (roll-in)
+- Søkedypet for denne stillingen.
+- Verdien som ble returnert av søket.
+- Hvorvidt denne verdien var en eksakt verdi eller bare en øvre eller nedre
+  grense for den eksakte verdien.
+- Det beste trekket som ble funnet.
+
+#+REVEAL: split
+#+ATTR_REVEAL: :frag (roll-in)
+Det finnes ikke nok minne til å lagre /alle/ stillinger som forekommer i søket.
+Programmet forsøker å ta vare på de viktigste stillingene og overskrive de
+mindre viktige.
+
+#+ATTR_REVEAL: :frag (roll-in)
+Hvis en stilling har vært søkt før og er lagret i transposisjonstabellen, og
+oppstår igjen i søket, kan informasjonen brukes på to måter:
+
+#+REVEAL: split
+
+#+ATTR_REVEAL: :frag (roll-in)
+- Hvis det forrige søket var tilstrekkelig dypt, kan vi bruke den lagrede
+  informasjonen og unngå å søke på nytt.
+- Hvis det forrige søket ikke var tilstrekkelig dypt, men det er et beste trekk
+  lagret, kan vi prøve dette trekket først. Det er sannsynligvis fremdeles det
+  beste trekket.
+
+** Iterativ fordypning
+#+ATTR_REVEAL: :frag (roll-in)
+Istedenfor å umiddelbart gjøre et dypt søk er det bedre å først gjøre et søk til
+dyp 1, så et søk til dyp 2, osv., helt til vi har nådd ønsket dyp eller tiden er
+brukt opp.
+
+#+ATTR_REVEAL: :frag (roll-in)
+Ved hvert dyp er transposisjonstabellen fylt av massevis av beste trekk fra
+forrige dyp. Dette hjelper oss til å søke trekkene som sannsynligvis er best
+først.
+
+#+ATTR_REVEAL: :frag (roll-in)
+Iterativ fordypning forenkler også fornuftig tidshåndtering.
+
+** Andre trekksorteringsheuristikker
+
+#+ATTR_REVEAL: :frag (roll-in)
+- Prøv trekk fra transposisjonstabellen, hvis det finnes.
+- Prøv slag som ser ut til å vinne meteriell.
+- Prøv trekk som var de beste trekkene i søskennoder.
+- Sorter resten av trekkene etter hvor ofte de har vært beste trekk tidligere
+  under søket.
+
+* Stillhetssøk
+
+#+ATTR_REVEAL: :frag (roll-in)
+- /Horisontproblemet/: Hva hvis vi er ved dyp 0 (altså en løvnode), men det
+  skjer noe fryktelig i neste trekk?
+- Eksempel: Ved dyp 1 slår dronningen et tårn som er forsvart.
+  Evalueringsfunksjonen returnerer et stort tall, fordi vi nettopp vant et tårn.
+- Men i virkeligheten er den store scoren feilaktig, fordi motstanderen kan ta
+  dronningen i neste trekk.
+
+#+REVEAL: split
+** To mulige løsninger
+#+ATTR_REVEAL: :frag (roll-in)
+- Å ta hensyn til brikker som står i slag i evalueringsfunksjonen.
+- Å prøve å la våre å evaluere ustabile stillinger, og å heller søke videre til
+  vi når en stabil og rolig stilling.
+
+#+REVEAL: split
+#+ATTR_REVEAL: :frag (roll-in)
+- I prakis har den andre løsningen vist seg å fungere bedre. Vi gjør et
+  /stillhetssøk/ (quiescence search).
+- Ved dyp 0 kaller vi ikke lenger evalueringsfunksjonen, men stillhetssøket.
+- Stillhetssøket ligner på det vanlige søket, bortsett fra at bare slag (og
+  kanskje noen sjakker) blir søkt, og det er lov å la være å gjøre et trekk
+  istedenfor å slå noe.
+
+* Nulltrekksavskjæringer
+
+#+ATTR_REVEAL: :frag (roll-in)
+/Nulltrekksobservasjonen/: I nesten alle sjakkstillinger finnes det et trekk som
+er bedre enn å gjøre ingenting (å gjøre et "nulltrekk").
+
+#+ATTR_REVEAL: :frag (roll-in)
+Hvordan kan vi bruke dette til å optimere søket?
+
+#+REVEAL: split
+** Rekursiv nulltrekksavskjæring
+#+ATTR_REVEAL: :frag (roll-in)
+- Før vi begynner å søke lovlige trekk gjør vi et nulltrekk (dvs. skifter siden
+  som er i trekket uten å gjøre noe trekk) og søker den resulterende stillingen
+  /med redusert dyp/.
+- Hvis søket med redusert dyp returnerer en score >= beta, returnerer vi denne
+  scoren umiddelbart, uten å søke noe trekk.
+
+#+REVEAL: split
+
+#+BEGIN_SRC
+negamax(board: Board, alpha: Int, beta: Int, depth: Int) -> Int
+   if depth == 0
+      return quiescenceSearch(board, alpha, beta)
+   else
+
+      // NEW: Null move pruning
+      if !isCheck(board)
+         var nullValue =
+            -negamax(doNullMove(board), -beta, -alpha, depth - R)
+         if nullValue >= beta
+            return nullValue
+
+      for move in possibleMoves(board)
+         var value =
+            -negamax(doMove(board, move), -beta, -alpha, depth - 1)
+         if value >= beta
+            return value   // EARLY RETURN!
+         if value > alpha
+            alpha = value
+
+   return alpha
+#+END_SRC
+
+#+REVEAL: split
+
+#+ATTR_REVEAL: :frag (roll-in)
+Rekursiv nulltrekksavskjæring reduserer effektiv forgreningsfaktor for sjakk fra
+ca. 6 til ca. 3.5.
+
+#+ATTR_REVEAL: :frag (roll-in)
+I motsetning til alfa/beta-avskjæringer er nulltrekksavskjæringer teoretisk
+usunne: De kan introdusere feil.
+
+* Reduksjoner
+
+#+ATTR_REVEAL: :frag (roll-in)
+Claude Shannon skisserte to typer sjakkprogrammer:
+
+#+ATTR_REVEAL: :frag (roll-in)
+- *Shannon type A*-programmer søker et tre med alle /lovlige/ trekk.
+- *Shannon type B*-programmer søker et tre med alle /plausible/ trekk.
+- Inntil nylig vare alle gode sjakkprogrammer av type A.
+- Det er for vanskelig å lage en presis plausible-trekk-generator.
+
+#+REVEAL: split
+#+ATTR_REVEAL: :frag (roll-in)
+- Hybrid mellom type A og type B: Søk alle lovlige trekk, men søk de mindre
+  plausible trekkene med /redusert dyp/.
+- Vi antar at de mindre plausible trekkene viser seg å være dårlige, men hvis de
+  overrasker oss og returner en god verdi, søker vi dem igjen med fullt dyp.
+- Hva slags heuristikker kan vi bruke for å bestemme hvilke trekk som er
+  plausible?
+
+#+REVEAL: split
+#+ATTR_REVEAL: :frag (roll-in)
+- Vi sorterer allerede trekkene basert på hvor gode vi tror de er, med de antatt
+  beste trekkene først.
+- Søk trekkene i begynnelsen av listen med fullt dyp. Trekkene senere i listen
+  er som regel svakere. Vi søker dem med redusert dyp, hvis de ikke er spesielt
+  spennende.
+
+#+REVEAL: split
+
+#+BEGIN_SRC
+negamax(board: Board, alpha: Int, beta: Int, depth: Int) -> Int
+   if depth == 0
+      return quiescenceSearch(board, alpha, beta)
+   else
+      var moveCount = 0
+      for move in possibleMoves(board)
+
+         // NEW: Late More Reductions
+         if moveCount >= 3 && !isExciting(move)
+            var lmrValue =
+               -negamax(doMove(board, move), -beta, -alpha, depth - R)
+            if lmrValue <= alpha
+               continue // SKIP FULL DEPTH SEARCH!
+
+         var value =
+            -negamax(doMove(board, move), -beta, -alpha, depth - 1)
+         if value >= beta
+            return value   // EARLY RETURN!
+         if value > alpha
+            alpha = value
+         moveCount++
+
+   return alpha
+#+END_SRC
+
+#+REVEAL: split
+
+*** Hvilke trekk er "spennende" og bør alltid søkes med fullt dyp?
+
+#+ATTR_REVEAL: :frag (roll-in)
+Noen ideer som ofte fungerer bra:
+
+#+ATTR_REVEAL: :frag (roll-in)
+- Sjakker
+- Slag som vinner materiell
+- Bondeforvandlinger
+- Trekk som truer noe skummelt
+- Trekk som ofte har vært gode tidligere i søket
+- Trekk som ofte har vært gode svar på trekket motstanderen nettopp gjorde.
+
+#+REVEAL: split
+#+ATTR_REVEAL: :frag (roll-in)
+Denne typen reduksjoner kan presse den effektive forgreningsfaktoren for sjakk
+ned til et sted mellom 1.5 og 2.
+
+#+ATTR_REVEAL: :frag (roll-in)
+Treet er imidlertid så inhomogent at det ikke lenger gir noe særlig mening å
+snakke om dypet på treet eller effektiv forgreningsfaktor.
+
+* Utvidelser
+
+#+ATTR_REVEAL: :frag (roll-in)
+I tillegg til å /redusere/ dypet for mindre interessante trekk, gir det mening å
+/utvide/ dypet for spesielt interessante trekk.
+
+#+ATTR_REVEAL: :frag (roll-in)
+Før pleide de fleste programmer å utvide sjakker, tvungne tilbakeslag, og ofte
+bondetrekk til syvende rad.
+
+#+ATTR_REVEAL: :frag (roll-in)
+Dessverre har utvidelser en tendens til å øke den effektive forgreningsfaktoren.
+De brukes derfor ikke så ofte lenger.
+
+#+REVEAL: split
+
+#+ATTR_REVEAL: :frag (roll-in)
+Unntaket er den ene gjenlevende ideen fra Deep Blue:
+
+#+ATTR_REVEAL: :frag (roll-in)
+Et /singulært trekk/ er et trekk som er det eneste gode trekket i en stilling.
+
+#+ATTR_REVEAL: :frag (roll-in)
+/Singulære utvidelser/ betyr at dypet økes med 1 for alle singulære trekk.
+
+#+ATTR_REVEAL: :frag (roll-in)
+Denne teknikken kan ofte hjelpe programmet til å finne veldig lange forserte
+varianter mye raskere.

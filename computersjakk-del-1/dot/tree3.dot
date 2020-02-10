@@ -1,0 +1,30 @@
+graph ""
+{
+  root ;
+  root [label="2"] ;
+  root -- n11 ;
+  n11 [label="2"] ;
+  root -- n12 ;
+  n12 [label="-1"] ;
+  root -- n13 ;
+  n13 [label="-2"] ;
+
+  n11 -- n21 ;
+  n21 [label="2"] ;
+  n11 -- n22 ;
+  n22 [label="5"] ;
+  n11 -- n23 ;
+  n23 [label="8"] ;
+
+  n12 -- n24 ;
+  n24 [label="-1"] ;
+  n12 -- n25 ;
+  n25 [label="4" ] ;
+
+  n13 -- n26 ;
+  n26 [label="-2"] ;
+  n13 -- n27 ;
+  n27 [label="3"] ;
+  n13 -- n28 ;
+  n28 [label="15"]
+}
